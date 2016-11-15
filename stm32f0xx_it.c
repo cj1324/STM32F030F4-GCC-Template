@@ -54,6 +54,8 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
+/* UART handler declared in "main.c" file */
+extern UART_HandleTypeDef UartHandle;
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
@@ -116,6 +118,12 @@ void EXTI0_1_IRQHandler(void)
     HAL_NVIC_ClearPendingIRQ(EXTI0_1_IRQn);
     HAL_GPIO_TogglePin(LED_GPIO_PORT, LED_GPIO_PIN);
     HAL_GPIO_EXTI_IRQHandler(BTN_GPIO_PIN);
+}
+
+
+void USARTx_IRQHandler(void)
+{
+  HAL_UART_IRQHandler(&UartHandle);
 }
 
 /******************************************************************************/

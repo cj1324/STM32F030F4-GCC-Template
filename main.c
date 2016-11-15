@@ -14,7 +14,12 @@
 /* Private macro -------------------------------------------------------------*/
 
 /* Private variables ---------------------------------------------------------*/
+UART_HandleTypeDef UartHandle;
 static GPIO_InitTypeDef  GPIO_InitStruct_LED, GPIO_InitStruct_BTN;
+uint8_t aTxBuffer[] = " ****UART_TwoBoards_ComIT****  ****UART_TwoBoards_ComIT****  ****UART_TwoBoards_ComIT**** ";
+
+/* Buffer used for reception */
+uint8_t aRxBuffer[RXBUFFERSIZE];
 
 /* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);
@@ -32,9 +37,6 @@ int main(void)
 {
     HAL_Init();
     SystemClock_Config();
-
-    //SystemCoreClockUpdate();
-    //SysTick_Config(SystemCoreClock/100); 
 
     __HAL_RCC_GPIOB_CLK_ENABLE();
 
@@ -64,7 +66,39 @@ int main(void)
     HAL_GPIO_WritePin(LED_GPIO_PORT, LED_GPIO_PIN, GPIO_PIN_RESET);
 
 
+  /*##-1- Configure the UART peripheral ######################################*/
+  /* Put the USART peripheral in the Asynchronous mode (UART Mode) */
+  /* UART configured as follows:
+      - Word Length = 8 Bits
+      - Stop Bit = One Stop bit
+      - Parity = None
+      - BaudRate = 9600 baud
+      - Hardware flow control disabled (RTS and CTS signals) */
+    UartHandle.Instance        = USARTx;
+    UartHandle.Init.BaudRate   = 9600;
+    UartHandle.Init.WordLength = UART_WORDLENGTH_8B;
+    UartHandle.Init.StopBits   = UART_STOPBITS_1;
+    UartHandle.Init.Parity     = UART_PARITY_NONE;
+    UartHandle.Init.HwFlowCtl  = UART_HWCONTROL_NONE;
+    UartHandle.Init.Mode       = UART_MODE_TX;
+    UartHandle.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT; 
+    if(HAL_UART_DeInit(&UartHandle) != HAL_OK)
+    {
+        Error_Handler();
+    }
+    if(HAL_UART_Init(&UartHandle) != HAL_OK)
+    {
+        Error_Handler();
+    }
+
+
     while (1) {
+
+        if(HAL_UART_Transmit_IT(&UartHandle, (uint8_t*)aTxBuffer, TXBUFFERSIZE)!= HAL_OK)
+        {
+            Error_Handler();
+        }
+
         HAL_GPIO_TogglePin(LED_GPIO_PORT, LED_GPIO_PIN);
         HAL_Delay(500);
     }
@@ -72,6 +106,10 @@ int main(void)
     return -1;
 }
 
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *UartHandle)
+{
+  /* Set transmission flag: trasfer complete*/
+}
 
 /**
   * @brief  System Clock Configuration

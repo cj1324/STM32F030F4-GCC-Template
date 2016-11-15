@@ -40,6 +40,7 @@ SET(STARTUP ${STARTUP}
     ${HAL_LIB_SRC}/stm32f0xx_hal_rcc.c
     ${HAL_LIB_SRC}/stm32f0xx_hal_rcc_ex.c
     ${HAL_LIB_SRC}/stm32f0xx_hal_gpio.c
+    ${HAL_LIB_SRC}/stm32f0xx_hal_uart.c
 )
 SET_PROPERTY(SOURCE Boot/startup_stm32f030x6.s PROPERTY LANGUAGE C)
 SET(SRC main.c stm32f0xx_it.c stm32f0xx_hal_msp.c)
