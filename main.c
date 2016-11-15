@@ -11,6 +11,7 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
+#define PUTCHAR_PROTOTYPE void __io_putchar(void* p, char ch)
 /* Private macro -------------------------------------------------------------*/
 
 /* Private variables ---------------------------------------------------------*/
@@ -20,6 +21,10 @@ uint8_t aTxBuffer[] = " ****UART_TwoBoards_ComIT****  ****UART_TwoBoards_ComIT**
 
 /* Buffer used for reception */
 uint8_t aRxBuffer[RXBUFFERSIZE];
+
+uint8_t btn_count = 0;
+
+PUTCHAR_PROTOTYPE;
 
 /* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);
@@ -66,16 +71,16 @@ int main(void)
     HAL_GPIO_WritePin(LED_GPIO_PORT, LED_GPIO_PIN, GPIO_PIN_RESET);
 
 
-  /*##-1- Configure the UART peripheral ######################################*/
-  /* Put the USART peripheral in the Asynchronous mode (UART Mode) */
-  /* UART configured as follows:
+    /*##-1- Configure the UART peripheral ######################################*/
+    /* Put the USART peripheral in the Asynchronous mode (UART Mode) */
+    /* UART configured as follows:
       - Word Length = 8 Bits
       - Stop Bit = One Stop bit
       - Parity = None
       - BaudRate = 9600 baud
       - Hardware flow control disabled (RTS and CTS signals) */
     UartHandle.Instance        = USARTx;
-    UartHandle.Init.BaudRate   = 9600;
+    UartHandle.Init.BaudRate   = 115200;
     UartHandle.Init.WordLength = UART_WORDLENGTH_8B;
     UartHandle.Init.StopBits   = UART_STOPBITS_1;
     UartHandle.Init.Parity     = UART_PARITY_NONE;
@@ -91,24 +96,20 @@ int main(void)
         Error_Handler();
     }
 
+    init_printf(0, __io_putchar);
 
     while (1) {
-
-        if(HAL_UART_Transmit_IT(&UartHandle, (uint8_t*)aTxBuffer, TXBUFFERSIZE)!= HAL_OK)
-        {
-            Error_Handler();
-        }
-
         HAL_GPIO_TogglePin(LED_GPIO_PORT, LED_GPIO_PIN);
         HAL_Delay(500);
     }
+
     Error_Handler();
     return -1;
 }
 
-void HAL_UART_TxCpltCallback(UART_HandleTypeDef *UartHandle)
+PUTCHAR_PROTOTYPE
 {
-  /* Set transmission flag: trasfer complete*/
+    HAL_UART_Transmit(&UartHandle, (uint8_t *)&ch, 1, 0xFFFF);
 }
 
 /**

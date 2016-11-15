@@ -5,6 +5,7 @@
 #include "stm32f0xx_hal.h"
 #include "stm32f0xx_hal_rcc_ex.h"
 #include "stm32f0xx_it.h"
+#include "printf.h"
 
 /* Private macro -------------------------------------------------------------*/
 

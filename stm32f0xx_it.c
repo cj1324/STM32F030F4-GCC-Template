@@ -56,6 +56,7 @@
 /* Private variables ---------------------------------------------------------*/
 /* UART handler declared in "main.c" file */
 extern UART_HandleTypeDef UartHandle;
+extern uint8_t btn_count;
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
@@ -116,7 +117,8 @@ void SysTick_Handler(void)
 void EXTI0_1_IRQHandler(void)
 {
     HAL_NVIC_ClearPendingIRQ(EXTI0_1_IRQn);
-    HAL_GPIO_TogglePin(LED_GPIO_PORT, LED_GPIO_PIN);
+    printf("BUTTON DEBUG. %d .\r\n", btn_count);
+    btn_count ++;
     HAL_GPIO_EXTI_IRQHandler(BTN_GPIO_PIN);
 }
 

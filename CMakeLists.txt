@@ -43,7 +43,7 @@ SET(STARTUP ${STARTUP}
     ${HAL_LIB_SRC}/stm32f0xx_hal_uart.c
 )
 SET_PROPERTY(SOURCE Boot/startup_stm32f030x6.s PROPERTY LANGUAGE C)
-SET(SRC main.c stm32f0xx_it.c stm32f0xx_hal_msp.c)
+SET(SRC main.c stm32f0xx_it.c stm32f0xx_hal_msp.c Lib/printf.c)
 
 SET(CMAKE_C_FLAGS_DEBUG "-O0 -g -ggdb")
 SET(CMAKE_VERBOSE_MAKEFILE ON)
