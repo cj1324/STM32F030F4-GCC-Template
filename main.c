@@ -29,6 +29,7 @@ PUTCHAR_PROTOTYPE;
 /* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);
 static void Error_Handler(void);
+static void UART_Init(void)
 
 
 /* Private functions ---------------------------------------------------------*/
@@ -71,13 +72,24 @@ int main(void)
     HAL_GPIO_WritePin(LED_GPIO_PORT, LED_GPIO_PIN, GPIO_PIN_RESET);
 
 
+    UART_Init();
+
+    init_printf(0, __io_putchar);
+
+    while (1) {}
+
+    Error_Handler();
+    return -1;
+}
+
+static void UART_Init(void){
     /*##-1- Configure the UART peripheral ######################################*/
     /* Put the USART peripheral in the Asynchronous mode (UART Mode) */
     /* UART configured as follows:
       - Word Length = 8 Bits
       - Stop Bit = One Stop bit
       - Parity = None
-      - BaudRate = 9600 baud
+      - BaudRate = 115200 baud
       - Hardware flow control disabled (RTS and CTS signals) */
     UartHandle.Instance        = USARTx;
     UartHandle.Init.BaudRate   = 115200;
@@ -95,16 +107,6 @@ int main(void)
     {
         Error_Handler();
     }
-
-    init_printf(0, __io_putchar);
-
-    while (1) {
-        HAL_GPIO_TogglePin(LED_GPIO_PORT, LED_GPIO_PIN);
-        HAL_Delay(500);
-    }
-
-    Error_Handler();
-    return -1;
 }
 
 PUTCHAR_PROTOTYPE
