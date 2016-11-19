@@ -20,10 +20,9 @@ INCLUDE_DIRECTORIES(
 )
 SET(HAL_LIB_SRC ${STM32CubeF0_FW}/Drivers/STM32F0xx_HAL_Driver/Src/)
 
-SET(CMAKE_VERBOSE_MAKEFILE 0)
+SET(CMAKE_VERBOSE_MAKEFILE OFF)
 SET(CMAKE_SYSTEM_NAME Linux)
-SET(CMAKE_BUILD_TYPE DEBUG)
-SET(CMAKE_VERBOSE_MAKEFILE ON)
+SET(CMAKE_BUILD_TYPE RELEASE)
 SET(CMAKE_C_COMPILER "arm-none-eabi-gcc")
 SET(CMAKE_LINKER "arm-none-eabi-ld")
 SET(CMAKE_OBJCOPY "arm-none-eabi-objcopy")
@@ -41,7 +40,11 @@ SET(STARTUP ${STARTUP}
     ${HAL_LIB_SRC}/stm32f0xx_hal_rcc_ex.c
     ${HAL_LIB_SRC}/stm32f0xx_hal_gpio.c
     ${HAL_LIB_SRC}/stm32f0xx_hal_uart.c
+    ${HAL_LIB_SRC}/stm32f0xx_hal_adc.c
+    ${HAL_LIB_SRC}/stm32f0xx_hal_adc_ex.c
+    ${HAL_LIB_SRC}/stm32f0xx_hal_dma.c
 )
+
 SET_PROPERTY(SOURCE Boot/startup_stm32f030x6.s PROPERTY LANGUAGE C)
 SET(SRC main.c stm32f0xx_it.c stm32f0xx_hal_msp.c Lib/printf.c)
 

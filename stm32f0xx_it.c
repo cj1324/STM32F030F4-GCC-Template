@@ -56,7 +56,9 @@
 /* Private variables ---------------------------------------------------------*/
 /* UART handler declared in "main.c" file */
 extern UART_HandleTypeDef UartHandle;
+extern ADC_HandleTypeDef AdcHandle;
 extern uint8_t btn_count;
+extern uint32_t aResultDMA;
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
@@ -117,9 +119,21 @@ void SysTick_Handler(void)
 void EXTI0_1_IRQHandler(void)
 {
     HAL_NVIC_ClearPendingIRQ(EXTI0_1_IRQn);
-    printf("BUTTON DEBUG. %d .\r\n", btn_count);
-    btn_count ++;
+
+    HAL_GPIO_TogglePin(LED_GPIO_PORT, LED_GPIO_PIN);
+    HAL_GPIO_TogglePin(BEEP_GPIO_PORT, BEEP_GPIO_PIN);
+
     HAL_GPIO_EXTI_IRQHandler(BTN_GPIO_PIN);
+}
+
+/**
+* @brief  This function handles DMA1 Channel6 interrupt request.
+* @param  None
+* @retval None
+*/
+void DMA1_Channel1_IRQHandler(void)
+{
+  HAL_DMA_IRQHandler(AdcHandle.DMA_Handle);
 }
 
 
